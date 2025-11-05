@@ -1,62 +1,16 @@
+// src/App.js
 import React, { Component } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import productsData from "./products";
+import Navbar from "./navbar";
+import DisplayProducts from "./displayProducts";
+import Cart from "./cart";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-// Child functional component
-function Product({ product, onIncrement, onDecrement }) {
-  return (
-    <div className="col-md-3 text-center mb-4">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="img-fluid mb-2"
-        style={{ maxHeight: "150px" }}
-      />
-      <h5>{product.name}</h5>
-      <p>Quantity: {product.quantity}</p>
-      <div>
-        <button
-          className="btn btn-sm btn-primary me-2"
-          onClick={() => onIncrement(product.id)}
-        >
-          +
-        </button>
-        <button
-          className="btn btn-sm btn-danger"
-          onClick={() => onDecrement(product.id)}
-        >
-          –
-        </button>
-      </div>
-    </div>
-  );
-}
 
 class App extends Component {
   state = {
-    siteName: "Shop to React",
-    products: [
-      {
-        id: 1,
-        name: "Unisex Cologne",
-        quantity: 0,
-        image: "/products/cologne.jpg",
-      },
-      {
-        id: 2,
-        name: "Apple iWatch",
-        quantity: 0,
-        image: "/products/iwatch.jpg",
-      },
-      { id: 3, name: "Unique Mug", quantity: 0, image: "/products/mug.jpg" },
-      {
-        id: 4,
-        name: "Mens Wallet",
-        quantity: 0,
-        image: "/products/wallet.jpg",
-      },
-    ],
+    siteName: "Shop 2 React",
+    products: productsData,
   };
 
   handleIncrement = (productId) => {
@@ -76,30 +30,31 @@ class App extends Component {
   };
 
   render() {
-    const totalQuantity = this.state.products
-      .map((p) => p.quantity)
-      .reduce((acc, curr) => acc + curr, 0);
+    const totalQuantity = this.state.products.reduce(
+      (acc, p) => acc + p.quantity,
+      0
+    );
 
     return (
-      <div className="container mt-4">
-        {/* Header */}
-        <h1 className="mb-4">
-          {this.state.siteName} <FontAwesomeIcon icon={faShoppingCart} />{" "}
-          {totalQuantity} items
-        </h1>
-
-        {/* Product List */}
-        <div className="row">
-          {this.state.products.map((product) => (
-            <Product
-              key={product.id}
-              product={product}
-              onIncrement={this.handleIncrement}
-              onDecrement={this.handleDecrement}
-            />
-          ))}
-        </div>
-      </div>
+      <Router>
+        <Navbar siteName={this.state.siteName} totalQuantity={totalQuantity} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <DisplayProducts
+                products={this.state.products}
+                onIncrement={this.handleIncrement}
+                onDecrement={this.handleDecrement}
+              />
+            }
+          />
+          <Route
+            path="/cart"
+            element={<Cart products={this.state.products} />}
+          />
+        </Routes>
+      </Router>
     );
   }
 }
