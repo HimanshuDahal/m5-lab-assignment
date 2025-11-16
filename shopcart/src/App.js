@@ -5,6 +5,8 @@ import productsData from "./products";
 import Navbar from "./navbar";
 import DisplayProducts from "./displayProducts";
 import Cart from "./cart";
+import SignIn from "./SignIn";
+import CheckOut from "./CheckOut";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends Component {
@@ -53,6 +55,8 @@ class App extends Component {
             path="/cart"
             element={<Cart products={this.state.products} />}
           />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/checkout" element={<CheckOut />} />
         </Routes>
       </Router>
     );
